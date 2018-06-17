@@ -15,6 +15,8 @@ public class Location {
     private double x;
     private double y;
     private String msg;
+    private double angle;
+    private double distance;
 
     public Location() {
         this.x = 0;

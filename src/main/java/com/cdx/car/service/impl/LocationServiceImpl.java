@@ -36,7 +36,7 @@ public class LocationServiceImpl implements LocationService {
             return Location.returnError();
         }
         getLine(distanceAngle.getAngle());
-        boolean isSuccess = getPoint(distanceAngle.getDistance());
+        boolean isSuccess = getPoint(distanceAngle);
         if (isSuccess) {
             return lastLocation;
         } else {
@@ -55,10 +55,13 @@ public class LocationServiceImpl implements LocationService {
         return lastLocation;
     }
 
-    private boolean getPoint(double distance) {
+    private boolean getPoint(DistanceAngle distanceAngle) {
+        double distance = distanceAngle.getDistance();
         if (flag) {
             double x = p;
             double y = Math.pow((Math.pow(distance, 2.0) - Math.pow(p, 2.0)), 0.5);
+            lastLocation.setAngle(distanceAngle.getAngle());
+            lastLocation.setDistance(calculateDistance(x,y,lastLocation.getX(),lastLocation.getY()));
             lastLocation.setX(x);
             lastLocation.setY(y);
             lastLocation.setMsg("success");
@@ -70,18 +73,26 @@ public class LocationServiceImpl implements LocationService {
             if (direction){
                 double x = (-2*k*b + Math.pow(temp, 0.5))/(2*k*k+2);
                 double y = k*x + b;
+                lastLocation.setAngle(distanceAngle.getAngle());
+                lastLocation.setDistance(calculateDistance(x,y,lastLocation.getX(),lastLocation.getY()));
+                lastLocation.setMsg("success");
                 lastLocation.setX(x);
                 lastLocation.setY(y);
-                lastLocation.setMsg("success");
             } else {
                 double x = (-2*k*b - Math.pow(temp, 0.5))/(2*k*k+2);
                 double y = k*x + b;
+                lastLocation.setAngle(distanceAngle.getAngle());
+                lastLocation.setDistance(calculateDistance(x,y,lastLocation.getX(),lastLocation.getY()));
                 lastLocation.setX(x);
                 lastLocation.setY(y);
                 lastLocation.setMsg("success");
             }
         }
         return true;
+    }
+
+    private double calculateDistance(double x, double y, double x1, double y1) {
+        return Math.pow((x-x1)*(x-x1)+(y-y1)*(y-y1),0.5);
     }
 
     private void getLine(double angle) {
