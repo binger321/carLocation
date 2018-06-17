@@ -8,10 +8,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -27,22 +24,23 @@ public class CarLocationController {
     @Autowired
     private LocationService locationService;
     @ApiOperation("接受距离和夹角")
-    @RequestMapping(value = "/receive", method = RequestMethod.POST)
-    public String receive(@RequestBody DistanceAngle distanceAngle){
+    @RequestMapping(value = "/receive", method = RequestMethod.GET)
+    public String receive(@RequestParam("distance")double distance, @RequestParam("angle")double angle){
+        DistanceAngle distanceAngle = new DistanceAngle(distance,angle);
         Location location = locationService.calculateLocation(distanceAngle);
         String str = MyEasyJsonUtil.json2string(location);
         return str;
     }
 
     @ApiOperation("得到当前位置")
-    @RequestMapping(value = "/getLocation", method = RequestMethod.POST)
+    @RequestMapping(value = "/getLocation", method = RequestMethod.GET)
     public String getLocation(){
         Location location = locationService.getLastLocation();
         return MyEasyJsonUtil.json2string(location);
     }
 
     @ApiOperation("重置起点位置")
-    @RequestMapping(value = "/resetOrigin", method = RequestMethod.POST)
+    @RequestMapping(value = "/resetOrigin", method = RequestMethod.GET)
     public String reset(){
         Location location = locationService.restLocation();
         return MyEasyJsonUtil.json2string(location);

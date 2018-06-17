@@ -14,4 +14,12 @@ import lombok.Data;
 public class DistanceAngle {
     private double distance;
     private double angle;
+
+    public DistanceAngle() {
+    }
+
+    public DistanceAngle(double distance, double angle) {
+        this.distance = distance;
+        this.angle = angle;
+    }
 }
